@@ -6,20 +6,38 @@
     <head>
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-        <title></title>
-        <meta name="description" content="">
+		<meta name="author" content="Santi & Ceci">
+        <meta name="description" content="Music Player with Playlist">
+        <title>Music Player</title>
         <meta name="viewport" content="width=device-width">
 
         <link rel="stylesheet" href="css/normalize.min.css">
         <link rel="stylesheet" href="css/main.css">
 
-        <script src="js/vendor/modernizr-2.6.2-respond-1.1.0.min.js"></script>
-		<script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
-        <script>window.jQuery || document.write('<script src="js/vendor/jquery-1.9.1.min.js"><\/script>')</script>
+		<script src="js/vendor/modernizr.min.js"></script>
+		<script src="js/vendor/jquery.min.js"></script>
 		<script src="js/vendor/jquery.nicescroll.min.js"></script>
-		<script src="http://www.google.com/jsapi"></script>
-		
-		
+		<script src="js/vendor/swfobject.js"></script>
+		<script src="js/vendor/audio-player.js"></script>
+		<script src="js/player.js"></script>
+		<script>
+		swfobject.embedSWF(
+				"player.swf",
+				"player_fallback",
+				"200",
+				"20",
+				"9.0.0",
+				"",
+				{"mp3":"Metallica_Nothing_else_Matters.mp3"},
+				{"bgcolor":"#085c68"});
+				AudioPlayer.setup("js/vendor/player.swf", {  
+        width: 290,  
+        initialvolume: 100,  
+        transparentpagebg: "yes",  
+        left: "000000",  
+        lefticon: "FFFFFF"  
+    });  
+		</script>
     </head>
     <body>
         <!--[if lt IE 7]>
@@ -28,12 +46,11 @@
 
         <div class="header-container">
             <header class="wrapper clearfix">
-                <h1 class="title">h1.title</h1>
+                <h1 class="title">Html5 Music Player</h1>
                 <nav>
                     <ul>
-                        <li><a href="#">nav ul li a</a></li>
-                        <li><a href="#">nav ul li a</a></li>
-                        <li><a href="#">nav ul li a</a></li>
+                        <li><a href="#">Add a Song</a></li>
+                        <li><a href="#">Config</a></li>
                     </ul>
                 </nav>
             </header>
@@ -45,26 +62,13 @@
 				
                 <article>
                     <header>
-                        <h1>Reproductor de MP3</h1>
+                        <h1>MP3 Player</h1>
 										
                     </header>
                     <section>
-					   <audio id="player" preload='auto'>
-						  An audio clip from Metallicaaa!
-						 
-  						  <source src="music/Metallica_Nothing_else_Matters.mp3" type="audio/mpeg"/>
-						 
-						  
-					   </audio>
-					   
-					   <div id="playerButtons"> 
-						   <button onclick="document.getElementById('player').play()">Play</button> 
-						   <button onclick="document.getElementById('player').pause()">Pause</button> 
-						   <button onclick="document.getElementById('player').volume += 0.1">Vol+ </button> 
-						   <button onclick="document.getElementById('player').volume -= 0.1">Vol- </button> 
-					   </div>
-						<p>Reproductor de musica realizado integramente en HTML5, CSS3 y JQuery.</p>
-                    </section>
+						<p>Music player done only with html5, css3, and jquery.</p> 
+
+                     <p id="player_fallback"></p>
 					<div id="divContenedor">
 						<div id="divReproductor">
 							<div id="divInfo">
@@ -72,22 +76,22 @@
 									<img src="img/logo.jpg" align="left" width="144px">
 								</div>
 								<div id="divInfoCancion">
-									<label id="lblCancion"><strong>Nombre: </strong><span>-</span></label>
-									<label id="lblArtista"><strong>Artista: </strong><span>-</span></label>
-									<label id="lblDuracion"><strong>Duraci&oacute;n: </strong><span>-</span></label>
-									<label id="lblEstado"><strong>Transcurrido: </strong><span>-</span></label>
+									<label id="lblCancion"><strong>Name: </strong><span>-</span></label>
+									<label id="lblArtista"><strong>Artist: </strong><span>-</span></label>
+									<label id="lblDuracion"><strong>Length: </strong><span>-</span></label>
+									<label id="lblEstado"><strong>Elapsed: </strong><span>-</span></label>
 								</div>
 								<div style="clear: both"></div>
 							</div>
 							<div id="divControles">
-								<input type="button" id="btnReproducir" title="Reproducir">
-								<input type="button" id="btnPausar" title="Pausar/Continuar">
-								<input type="button" id="btnAnterior" title="Anterior">
-								<input type="button" id="btnSiguiente" title="Siguiente">
-								<input type="button" id="btnSubirVolumen" title="Subir volumen">
-								<input type="button" id="btnBajarVolumen" title="Bajar volumen">
-								<input type="button" id="btnSilencio" title="Poner/Quitar silencio">
-								<input type="button" id="btnRepetir" title="Repetir la lista al finalizar">
+								<input type="button" id="btnReproducir" title="Play">
+								<input type="button" id="btnPausar" title="Pause/Continue">
+								<input type="button" id="btnAnterior" title="Back">
+								<input type="button" id="btnSiguiente" title="Next">
+								<input type="button" id="btnSubirVolumen" title="Turn up volume">
+								<input type="button" id="btnBajarVolumen" title="Turn down volume">
+								<input type="button" id="btnSilencio" title="Put/Remove silence">
+								<input type="button" id="btnRepetir" title="Repeat playlist">
 							</div>
 							<div id="divProgreso">
 								<div id="divBarra" ></div>
@@ -119,15 +123,23 @@
 								</ol>
 							</div>
 							<div id="divCreditos">
-								<h1>Reproductor de m&uacute;sica con HTML5 y jQuery</h1>
+								<h1>Html5 Music Player </h1>
 							</div>
 						</div>
 					</div>
-                </article>
+					</section>
+				</article>
 
                 <aside>
-                    <h3>aside</h3>
-                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam sodales urna non odio egestas tempor. Nunc vel vehicula ante. Etiam bibendum iaculis libero, eget molestie nisl pharetra in. In semper consequat est, eu porta velit mollis nec. Curabitur posuere enim eget turpis feugiat tempor. Etiam ullamcorper lorem dapibus velit suscipit ultrices.</p>
+                    <h3>Search in Repo</h3>
+					<input id="searchBox" placeholder="Search..."></input>
+                    <section class="musicFile-container">
+					<ul>
+						<li>Song 4</li>
+						<li>Song 3</li>
+					</ul>
+					<comment>This section is not available</comment>
+					</section>
                 </aside>
 
             </div> <!-- #main -->
@@ -135,55 +147,30 @@
 
         <div class="footer-container">
             <footer class="wrapper">
-                <h3>footer</h3>
+                <h3>The html5Player Organization project</h3>
             </footer>
         </div>
-
-        
-		
-        <script src="js/main.js"></script>
-		<script>google.load("swfobject", "2.2");</script>
-		
 
  <script type="text/javascript">
           
 	$("#divLista").niceScroll({ autohidemode: false,cursorwidth: 8, background: "#DCDCDC", cursorcolor: "#7F7F7F", railalign: "center", zindex: 99999 });
 	
-	var audio = new Audio();
-	alert(Modernizr.audio.mp3 );
-	//vamos a manejar solo archivos .mp3 entonces se va a necesitar la extensión para que cuando hayan problemas de reproducción de música se encuentre la extensión adecuada
-	var extensionAudio = ".mp3";
-	var isFlash = false;
-	// Need to check the canPlayType first or an exception
-    // will be thrown for those browsers that don't support it      
-	
-    var myAudio = document.createElement('audio'); 
-    
-    if (myAudio.canPlayType) {
-      
-       // Currently canPlayType(type) returns: "", "maybe" or "probably" 
 
-       var canPlayMp3 = !!myAudio.canPlayType && "" != myAudio.canPlayType('audio/mpeg');
-       var canPlayOgg = !!myAudio.canPlayType && "" != myAudio.canPlayType('audio/ogg; codecs="vorbis"');
-    }
-	if (document.createElement('audio').canPlayType) {
-		if (!document.createElement('audio').canPlayType('audio/mpeg')) {
-		  swfobject.embedSWF(
-			"player_mp3_mini.swf", 
-			"player_fallback", 
-			"200", 
-			"20", 
-			"9.0.0", 
-			"", 
-			{"mp3":"Metallica_Nothing_else_Matters.mp3"}, 
-			{"bgcolor":"#085c68"});
-			
-			alert("entrooo");
-		}
-	}		
-			
-	//creamos un objeto Audio de HTML5 para reproducir archivos
+	//player.initialize("player-container");
+	//player.addToPlaylist("Sample");
+	//player.Play();
+	
+	
 	var objReproductor=new Audio();
+	
+		if (!(!!(objReproductor.canPlayType) && ("no" != objReproductor.canPlayType("audio/mpeg")) && ("" != objReproductor.canPlayType("audio/mpeg")))) {
+		
+			AudioPlayer.embed("player_fallback", {soundFile: "music/Metallica_Nothing_else_Matters.mp3"});  
+
+
+		  
+		}
+		
 	//variable para almacenar la cancion que se esta reproduciendo
 	var iCancionActual=0;
 	//obtenemos la cantidad total de canciones en la lista (mas abajo la necesitaremos)
@@ -299,19 +286,8 @@
 	
 	//errores del reproductor
 	$(objReproductor).on('error',function(){
-		var audioSrc = objReproductor.src;
-		var newAudiosrc = 	audioSrc.substring(0, audioSrc.length-3)+'mp3';
-		alert('Se produjo un error en la reproducción! '+audioSrc+" cambiar por: "+newAudiosrc);
-		swfobject.embedSWF(
-			"player_mp3_mini.swf", 
-			"player_fallback", 
-			"200", 
-			"20", 
-			"9.0.0", 
-			"", 
-			{"mp3":"musica.mp3"+newAudiosrc}, 
-			{"bgcolor":"#085c68"});
-	
+		
+	alert("Cannot reproduce the media");
 		
 	});
 	
