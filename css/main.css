@@ -214,14 +214,14 @@ input[type="button"].clsSeleccionado{
 	text-align: center;
 }
 
-#btnReproducir{background: url(../img/reproducir.png) center no-repeat;}
-#btnPausar{background: url(../img/pausar.png) center no-repeat;}
-#btnSiguiente{background: url(../img/siguiente.png) center no-repeat;}
-#btnAnterior{background: url(../img/anterior.png) center no-repeat;}
-#btnSilencio{background: url(../img/silencio.png) center no-repeat;}
-#btnSubirVolumen{background: url(../img/subir-volumen.png) center no-repeat;}
-#btnBajarVolumen{background: url(../img/bajar-volumen.png) center no-repeat;}
-#btnRepetir{background: url(../img/repetir.png) center no-repeat;}
+#Play-button{background: url(../img/reproducir.png) center no-repeat;}
+#Pause-button{background: url(../img/pausar.png) center no-repeat;}
+#Next-button{background: url(../img/siguiente.png) center no-repeat;}
+#Previous-button{background: url(../img/anterior.png) center no-repeat;}
+#Mute-button{background: url(../img/silencio.png) center no-repeat;}
+#UpVolume-button{background: url(../img/subir-volumen.png) center no-repeat;}
+#DownVolume-button{background: url(../img/bajar-volumen.png) center no-repeat;}
+#repeatList-button{background: url(../img/repetir.png) center no-repeat;}
 #divProgreso{
 	height: 15px;
 	margin: 10px;
