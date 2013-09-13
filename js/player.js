@@ -3,7 +3,7 @@ var player =
 	playerObject: $("<audio/>", {id :'musicPlayer'}),
 	currentTrack:0,
 	trackCount:0,
-	repeatPlayList: false,
+	repeatPlayList: true,
 	playlistSources: "",
 	initialize: function (){
 		
@@ -11,16 +11,16 @@ var player =
 		this.playlistSources = new Array();
 		$(this.playerObject).on('ended',function(){
 		
-			if(this.currentTrack==this.trackCount-1){
-				if(this.repeatPlayList){
-					this.currentTrack = 0;
-					this.playerObject.src = this.playlistSources[this.currentTrack];
-					this.Play();
+			if(player.currentTrack==player.trackCount-1){
+				if(player.repeatPlayList){
+					player.currentTrack = 0;
+					player.playerObject[0].src = player.playlistSources[player.currentTrack];
+					player.Play();
 				}
 			}else{
-				this.currentTrack++;
-				this.playerObject.src = this.playlistSources[this.currentTrack];
-				this.Play();
+				player.currentTrack++;
+				player.playerObject[0].src = player.playlistSources[player.currentTrack];
+				player.Play();
 			}
 		});
 		this.currentTrack=0;
@@ -52,13 +52,28 @@ var player =
 		if(this.currentTrack==this.trackCount-1){
 				if(this.repeatPlayList){
 					this.currentTrack = 0;
-					this.playerObject.src = this.playlistSources[this.currentTrack];
+					this.playerObject[0].src = this.playlistSources[this.currentTrack];
 					this.playerObject[0].load();
 					this.Play();
 				}
 			}else{
 				this.currentTrack++;
-				this.playerObject.src = this.playlistSources[this.currentTrack];
+				this.playerObject[0].src = this.playlistSources[this.currentTrack];
+				this.playerObject[0].load();
+				this.Play();
+			}
+	},
+	Prev: function(){
+		if(this.currentTrack==0){
+				if(this.repeatPlayList){
+					this.currentTrack = this.trackCount-1;
+					this.playerObject[0].src = this.playlistSources[this.currentTrack];
+					this.playerObject[0].load();
+					this.Play();
+				}
+			}else{
+				this.currentTrack--;
+				this.playerObject[0].src = this.playlistSources[this.currentTrack];
 				this.playerObject[0].load();
 				this.Play();
 			}
