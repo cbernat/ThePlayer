@@ -51,8 +51,8 @@
                 <h1 class="title">Html5 Music Player</h1>
                 <nav>
                     <ul>
-                        <li><a href="#">Add a Song</a></li>
-                        <li><a href="#">Config</a></li>
+                        <li><a href="#">Add a Song <br>(Pending)</a></li>
+                        <li><a href="#">Config <br> (Pending)</a></li>
                     </ul>
                 </nav>
             </header>
@@ -78,8 +78,7 @@
 									<img src="img/logo.jpg" align="left" width="144px">
 								</div>
 								<div id="divInfoCancion">
-									<label id="trackName"><strong>Name: </strong><span>-</span></label>
-									<label id="artistName"><strong>Artist: </strong><span>-</span></label>
+									<label id="trackName"><strong>Track: </strong><span id="CurrentTrackName">-</span></label>
 									<label id="trackLenght"><strong>Length: </strong><span>-</span></label>
 									<label id="elapsedTime"><strong>Elapsed: </strong><span>-</span></label>
 								</div>
@@ -101,26 +100,6 @@
 							<div id="divLista">
 								<ol id="playList">
 									
-									<li rel="music/Metallica_Nothing_else_Matters.mp3">
-										<strong>Nothing Else Matters.mp3</strong>
-										<em>Metallica</em>
-									</li>
-									<li rel="music/Kalimba.mp3">
-										<strong>Kalimba.mp3</strong>
-										<em>Metallica</em>
-									</li>
-									<li rel="music/SleepAway.mp3">
-										<strong>Sleep Away.mp3</strong>
-										<em>Metallica</em>
-									</li>
-									<li rel="music/Metallica_Nothing_else_Matters.mp3">
-										<strong>Nothing Else Matters.mp3</strong>
-										<em>Metallica</em>
-									</li>
-									<li rel="music/Metallica_Nothing_else_Matters.mp3">
-										<strong>Nothing Else Matters.mp3</strong>
-										<em>Metallica</em>
-									</li>
 									
 								</ol>
 							</div>
@@ -157,230 +136,62 @@
           
 	$("#divLista").niceScroll({ autohidemode: false,cursorwidth: 8, background: "#DCDCDC", cursorcolor: "#7F7F7F", railalign: "center", zindex: 99999 });
 	
+	function UpdateLoadSongsOnUI(listArray){
+		for(var i=0;i<listArray.length;i++){
+		$("#divLista").children().first().append($("<li></li>", {rel:listArray[i]}).append($("<strong>"+listArray[i]+"</strong>")));
+		}
+	}
 
 	player.initialize();
-	player.addToPlaylist("music/notify.mp3");
+	player.addToPlaylist("music/Metallica_Nothing_else_Matters.mp3");
 	player.addToPlaylist("music/Sample.mp3");
 	player.addToPlaylist("music/Kalimba.mp3");
-	player.Play();
+	player.addToPlaylist("music/SleepAway.mp3");
+	player.addToPlaylist("music/Notify.mp3");
 	
+	UpdateLoadSongsOnUI(player.playlistSources);
 	
-	var objReproductor=new Audio();
+	$("#Play-button").click(function(){
+		player.Play();
+	});
 	
-		if (!(!!(objReproductor.canPlayType) && ("no" != objReproductor.canPlayType("audio/mpeg")) && ("" != objReproductor.canPlayType("audio/mpeg")))) {
-		
-			AudioPlayer.embed("player_fallback", {soundFile: "music/Metallica_Nothing_else_Matters.mp3"});  
+	$("#Next-button").click(function(){
+		player.Next();
+	});
+	
+	$("#Previous-button").click(function(){
+		player.Prev();
+	});
+	
+	$('#Mute-button').click(function(){
+		player.Mute();
+		$(this).toggleClass('clsSeleccionado');
+	});
+	
+	$("#UpVolume-button").click(function(){
+	
+		player.VolumeUp();
+	});
+	
+	$("#DownVolume-button").click(function(){
+	
+		player.VolumeDown();
+	});
+	
+	$("#Pause-button").click(function(){
+		player.Pause();
+	});
+	
+	$("#repeatList-button").click(function(){
+		player.repeatPlayList = !player.repeatPlayList;
+		$(this).toggleClass('clsSeleccionado');
+	});
 
-		}
-		
-	//variable para almacenar la cancion que se esta reproduciendo
-	var iCancionActual=0;
-	//obtenemos la cantidad total de canciones en la lista (mas abajo la necesitaremos)
-	var iTotalCanciones=$('#playList li').length;
-	
-	//le asignamos al reproductor la primera cancion de la lista
-	objReproductor.src=$('#playList').children().eq(0).attr('rel');
-	
-	//click en el boton play
-	$('#Play-button').on('click',function(){
-		//llamamos a la funcion que reproduce los archivos
-		fntReproducir();
-	});
-	
-	//reproducir el siguiente archivo de la lista
-	$('#Next-button').on('click',function(){
-		//verificamos si siguen mas canciones en la lista
-		if(iCancionActual<iTotalCanciones-1){
-			//pasamos a la siguiente cancion
-			iCancionActual++;
-		}else{
-			//volvemos a la primera cancion de la lista
-			iCancionActual=0;
-		}
-		//reproducimos el archivo que sigue
-		fntReproducir();
-	});
-	
-	//clic en el boton silencio
-	$('#Mute-button').on('click',function(){
-		//colocamos el estado mute a su contrario, es decir... si esta mudo
-		//volvemos a activar el sonido; si el sonido esta activado lo desactivamos
-		objReproductor.muted=!objReproductor.muted;
-		//quitamos o agregamos la clase que indica si el sonido esta activado o no
-		$(this).toggleClass('clsSeleccionado');
-	});
-	
-	//funcion que reproduce los archivos de audio
-	function fntReproducir(){
-		//obtenemos una instancia del elemento que contiene la info. de cancion a reproducir
-		var $objContenedorCancion=$('#playList').children().eq(iCancionActual);
-		//obtenemos la ruta del archivo que se va a reproducir y se lo asignamos
-		//al source del audio player de HTML5
-		objReproductor.src=$objContenedorCancion.attr('rel');
-		
-		//desmarcamos cualquier cancion en la lista (si es que estuviese marcada alguna)
-		$('#playList li').removeClass('clsSeleccionado');
-		//marcamos en la lista la cancion que vamos a reproducir
-		$objContenedorCancion.addClass('clsSeleccionado');
-		
-		//reproducir la cancion con el metodo play de la API de HTML5
-		objReproductor.play();
-		
-		//ocultamos suavemente los datos de la cancion anterior 
-		$('#divInfoCancion').find('label').stop(true.true).animate({
-			opacity: 0
-		},function(){
-			//obtenemos una instancia del elemento que contiene los datos de la cancion
-			var $objContenedorCancion=$('#playList').children().eq(iCancionActual);
-			
-			//actualizamos la informacion de la cancion que se esta reproduciendo
-			//duracion total
-			$('#trackLenght').find('span').text('00:00');
-			//nombre de la cancion
-			$('#trackName').find('span').text($objContenedorCancion.find('strong').text());
-			//artista
-			$('#artistName').find('span').text($objContenedorCancion.find('em').text());
-			//tiempo transcurrido
-			$('#elapsedTime').find('span').text('00:00');
-			
-			//mostramos suavemente la info. de la nueva cancion
-			$(this).stop(true,true).animate({
-				opacity: 1
-			});
-		});
-	};
-	
-	//subir el volumen del reproductor
-	$('#UpVolume-button').on('click',function(){
-		//si el volumen es diferente que uno (100%) entonces lo aumentamos en 0.1
-		//por cada clic que se haga en el boton
-		if(objReproductor.volume!=1) objReproductor.volume+=0.1;
-	});
-	
-	//bajar el volumen de la reproduccion
-	$('#DownVolume-button').on('click',function(){
-		//si el volumen es diferente que cero entonces lo bajamos 0.1
-		//por cada clic que se haga en el boton
-		if(objReproductor.volume!=0) objReproductor.volume-=0.1;
-	});
-	
-	//evento a hacer clic en el boton anterior
-	$('#Previous-button').on('click',function(){
-		//verificamos si estamos posicionados en la primera cancion o no
-		if(iCancionActual>=1){
-			//retrocedemos una cancion
-			iCancionActual--;
-		}else{
-			//pasamos a la ultima cancion de la lista
-			iCancionActual=$('#playList li').length-1;
-		}
-		//reproducimos la cancion
-		fntReproducir();
-	});
-	
-	//evento al hacer clic en cualquiera de las canciones
-	$('#playList li').on('click',function(){
-		//establecemos el numero de cancion (usando el indice del li clickeado)
-		iCancionActual=$(this).index();
-		//llamamos a la funcion que reproduce los archivos de audio
-		fntReproducir();
-	});
-	
-	//errores del reproductor
-	$(objReproductor).on('error',function(){
-		
-	alert("Cannot reproduce the media");
-		
-	});
-	
-	//pausar o continuar la reproduccion
-	$('#Pause-button').on('click',function(){
-		//verificamos si la reproduccion esta pausada
-		if(objReproductor.paused){
-			//verificamos que el archivo se haya reproducido aunque sea un segundo
-			if(objReproductor.currentTime>0){
-				//reanudamos la reproduccion (estaba pausada)
-				objReproductor.play();
-				//eliminamos la clase al boton
-				$(this).removeClass('clsSeleccionado');
-			}
-		}else{
-			//agregamos la clase al boton (solo para estilizar, no es nada funcional)
-			$(this).addClass('clsSeleccionado');
-			//pausamos la reproduccion actual
-			objReproductor.pause();
-		}
-	});
-	
-	//boton para establecer la reproduccion continua de la lista
-	$('#repeatList-button').on('click',function(){
-		//simplemente es jugar con una clase (agregarla o quitarla)
-		//en el evento ended se va a verificar la clase para continuar o no la reproduccion
-		$(this).toggleClass('clsSeleccionado');
-	});
-	
-	//evento que se dispara al finalizar la reproduccion
-	$(objReproductor).on('ended',function(){
-		//verificamos si es la ultima cancion de la lista
-		if(iCancionActual==iTotalCanciones-1){
-			//si es la ultima entonces verificamos si la opcion de repetir
-			//esta marcada
-			if($('#repeatList-button').hasClass('clsSeleccionado')){
-				//reproducimos la siguiente cancion (en este caso seria la numero 1)
-				$('#Next-button').trigger('click');	
-			}
-		}else{
-			//reproducimos la siguiente cancion de la lista
-			$('#Next-button').trigger('click');
-		}
-	});
-	
-	//actualizar el tiempo transcurrido y la barra de progreso
-	$(objReproductor).on('timeupdate',function(){
-		//tiempo transcurrido de la reproduccion
-		var iTiempoTranscurrido=objReproductor.currentTime;
-		//duracion total de la cancion
-		var iTiempoTotal=objReproductor.duration;
-		//porcentaje aproximado de la reproduccion
-		var iPorcentajeProgreso=(iTiempoTranscurrido*100)/iTiempoTotal;
-		//formateamos el tiempo
-		var objTiempo=fntTransformarSegundos(iTiempoTranscurrido);
-		
-		//obtenemos la duracion de la cancion
-		var objDuracion=fntTransformarSegundos(iTiempoTotal);
-		$('#trackLenght').find('span').text(objDuracion[0]+':'+objDuracion[1]);
-		
-		//el ancho de la barra sera el porcentaje que obtuvimos... recuerde que la capa #divBarra
-		//tiene un ancho predeterminado de 100% (se ajusta al contenedor padre), es por eso que
-		//le estoy dando el tamano con porcentajes... veamoslo como una especie de truco
-		$('#divBarra').css('width',iPorcentajeProgreso+'%');
-		//actualizar el tiempo transcurrido
-		$('#elapsedTime').find('span').text(objTiempo[0]+':'+objTiempo[1]);
-	});
-	
-	//funcion para formatear los segundos en minutos y segundos (retorna un Array)
-	function fntTransformarSegundos(iTiempoTranscurrido){
-		//obtener los minutos
-		var iMinutos=Math.floor(iTiempoTranscurrido/60);
-		//se obtienen los segundos
-		var iSegundos=Math.floor(iTiempoTranscurrido-iMinutos*60);
-		
-		//le agregamos un cero a los minutos y segundos, solo por estetica
-		if(iSegundos<10) iSegundos='0'+iSegundos;
-		if(iMinutos<10) iMinutos='0'+iMinutos;
-		
-		//devolvemos un array con el tiempo formateado
-		return Array(iMinutos,iSegundos);
-	};
-	
-	//cambiar la opacidad de los botones al colocar el puntero del raton sobre ellos
 	$('input[type="button"]').hover(function(){
-		//cambiamos la opacidad a 50%
 		$(this).stop(true.true).animate({
 			opacity: .5
 		});
 	},function(){
-		//le devolvemos al boton la opacidad de 100%
 		$(this).stop(true,true).animate({
 			opacity: 1
 		});
